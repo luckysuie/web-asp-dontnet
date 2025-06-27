@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: asp-webapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: asp-webapp
+  template:
+    metadata:
+      labels:
+        app: asp-webapp
+    spec:
+      containers:
+      - name: asp-container
+        image: luckyregistry.azurecr.io/asp:latest
+        ports:
+        - containerPort: 8080
+      imagePullSecrets:
+      - name: acr-auth
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: asp-service
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    app: asp-webapp
+
